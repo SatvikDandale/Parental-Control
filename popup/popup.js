@@ -11,9 +11,7 @@ var config = {
 };
 const app = firebase.initializeApp(config);
 
-var port = chrome.extension.connect({
-    name: "Communicate"
-});
+
 
 const txtEmail = document.getElementById('txtEmail');
 const txtPassword = document.getElementById('txtPassword');
@@ -48,6 +46,9 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
 })
 
 */
+var port = chrome.extension.connect({
+    name: "Communicate"
+});
 
 function print_info(tabs_data){
     var initial = "<tr><th>Website</th><th>Time Spent</th></tr>";
@@ -68,16 +69,6 @@ function print_info(tabs_data){
 }
 
 port.postMessage("Connected");
-port.postMessage("Sync");
 port.onMessage.addListener(function(tabs_data){
     print_info(tabs_data);
 });
-document.getElementById("Trigger").addEventListener("click", function(){
-    // This is used to upload the dictionary to RTD.
-    port.postMessage("Sync");
-    // background.js will understand this msg and update RTD
-});
-
-document.getElementById("Update").addEventListener("click", function(){
-    port.postMessage("Update");
-})

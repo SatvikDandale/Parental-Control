@@ -67,9 +67,5 @@ chrome.extension.onConnect.addListener(function(port){
 	port.onMessage.addListener(function(msg){
 		if (msg === "Connected")
 			port.postMessage(tabs_data);
-        else if (msg === "Sync")
-            updateInfo(tabs_data, 'testing_tabs');
-        else if (msg === "Update")
-            port.postMessage(tabs_data);
 	});
 });
