@@ -47,7 +47,7 @@ function update_info(){
                 // That means the tab just opened in the current session.
             }
             else if (!(current_tabs.includes(domain))){
-                tabs_data[domain] += interval; // Add the interval time
+                tabs_data[domain] += interval/1000; // Add the interval time in sec not msec
             }
 			current_tabs.push(domain);
         }
@@ -56,10 +56,11 @@ function update_info(){
 }
 
 function trigger(){
-    updateInfo(tabs_data, 'testing_tabs');
+    UpdateInfo(tabs_data);
 }
 
 // After every fixed interval, update the data of the open tabs
+setInterval(trigger, interval);
 setInterval(update_info, interval);
 
 chrome.extension.onConnect.addListener(function(port){

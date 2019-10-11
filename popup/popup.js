@@ -63,7 +63,7 @@ function print_info(tabs_data){
         var hour = time/3600;
         //var content = "<strong>" + id + "</strong>: " + + hour.toFixed(0) + " hours : " + min.toFixed(0) + " mins : " + sec + " secs<br />";
 
-        content += "<tr><td><strong>" + id + "</strong></td><td>" + hour.toFixed(0) + " hours : " + min.toFixed(0) + " mins : " + sec + " secs" + "</td></tr>";
+        content += "<tr><td><strong>" + id + "</strong></td><td>" + hour.toFixed(0) + " hours : " + min.toFixed(0) + " mins : " + sec*1000/*(secs are in msec)*/ + " secs" + "</td></tr>";
     }
     document.getElementById("table").innerHTML  = content;
 }
