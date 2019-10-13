@@ -55,7 +55,7 @@ function UpdateInfo(obj){
         console.log("Temp Dict is", temp_dict);
         if (flag_for_update === false){ // We only have to update temp_dict with obj once
             for(var website in obj){
-                if (temp_dict[website] !== undefined){  // If the website is already in temp_dict, just add previous time of temp_dict to current obj dict.
+                if (temp_dict !== null && temp_dict[website] !== undefined){  // If the website is already in temp_dict, just add previous time of temp_dict to current obj dict.
                     obj[website] += temp_dict[website]
                 }
                 flag_for_update = true; // We only have to update temp_dict with obj once
