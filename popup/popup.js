@@ -1,4 +1,4 @@
-/*
+
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyC5VDpdFZVH3OuzN_sbnMAiMIq9gac39WQ",
@@ -10,8 +10,6 @@ var config = {
     appId: "1:911483901445:web:8c4577a3f06d59c7006e6c"
 };
 const app = firebase.initializeApp(config);
-
-
 
 const txtEmail = document.getElementById('txtEmail');
 const txtPassword = document.getElementById('txtPassword');
@@ -45,7 +43,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
         console.log("Not logged in");
 })
 
-*/
+
 var port = chrome.extension.connect({
     name: "Communicate"
 });

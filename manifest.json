@@ -20,12 +20,14 @@
 			"FireBaseCore/firebase-app.js",
 			"FireBaseCore/firebase-auth.js",
 			"FireBaseCore/firebase-database.js",
-			"new_back.js",
-			"background.js"
+			"FireBaseCore/firebase-firestore.js",
+			"updating_firebase.js",
+			"background.js",
+			"temp.js"
 		]
 	},
 	"browser_action":{
-		"default_popup": "popup/popup.html"
+		"default_popup": "popup/login.html"
 	},
 	"content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'; "
 

@@ -1,14 +1,5 @@
 /*
-// On refresh
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab){
-  if(tab.url !== undefined && changeInfo.status == "complete")
-    // Trigger just once when the reload is complete
-    console.log(tabId);
-});
-// On Tab Shift
-chrome.tabs.onActivated.addListener(function(activeInfo){
-  console.log(activeInfo.tabId);
-});
+    This script is for the calculation in local domain
 */
 
 
@@ -56,12 +47,13 @@ function update_info(){
 }
 
 function trigger(){
+    // UPDATE FIREBASE DATA
     UpdateInfo(tabs_data);
 }
 
 // After every fixed interval, update the data of the open tabs
-setInterval(trigger, interval);
-setInterval(update_info, interval);
+setInterval(update_info, interval); // LOCAL
+setInterval(trigger, interval); // FIREBASE
 
 chrome.extension.onConnect.addListener(function(port){
 	//console.log("Connected with pop");

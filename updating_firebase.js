@@ -1,5 +1,4 @@
-// TODO(DEVELOPER): Change the values below using values from the initialization snippet: Firebase Console > Overview > Add Firebase to your web app.
-// Initialize Firebase
+// SCRIPT FOR FIREBASE
 var flag_for_sync = false;
 var flag_for_update = false;
 
@@ -23,36 +22,18 @@ var yyyy = today.getFullYear();
 today = dd + '/' + mm + '/' + yyyy;
 
 // CREATE REFERENCE
-//const dbRefObj = firebase.database().ref().child(yyyy).child(mm).child(dd);
-const db = firebase.database().ref().child(yyyy).child(mm).child(dd);
+const db = firebase.database().ref().child('Internet Usage').child(yyyy).child(mm).child(dd);
 // This will create a new Node
 db.once('value', function(snap){
     temp_dict = (snap.val());
     flag_for_sync = true;
 });
 
-
-// .on will determine the amount of synchronization.
-// db.on('value', snap => console.log("The updated child is: " + JSON.stringify(snap.val())));
-// snap is the snapshot of the required part of database
-// Here snap includes the contents of New_Test
-
-var temp_dict = {}
-// BEFORE WRITING TO FIREBASE, FIRST DOWNLOAD THE CURRENT DICT and see if some values preexists
-function utility(callback) {
-    callback();
-}
-utility(function(){
-
-});
-
-// WE GOT THE PREEXISTING dictionary
-
 // Add to the child
 function UpdateInfo(obj){
     if (flag_for_sync){
         // Compare the snap with the updated dictionary
-        console.log("Temp Dict is", temp_dict);
+        //console.log("Temp Dict is", temp_dict);
         if (flag_for_update === false){ // We only have to update temp_dict with obj once
             for(var website in obj){
                 if (temp_dict !== null && temp_dict[website] !== undefined){  // If the website is already in temp_dict, just add previous time of temp_dict to current obj dict.
@@ -62,7 +43,7 @@ function UpdateInfo(obj){
             }
         }
 
-        console.log(obj);
+        //console.log(obj);
         db.update(obj);
     }
 }
