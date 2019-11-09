@@ -10,16 +10,16 @@
 			"matches": [
 				"<all_urls>"
 			],
-			"js": ["new_cont.js", "content.js"]
+			"js": ["content.js"]
 
 		}
 
 	],
 	"background":{
 		"scripts": [
-			"firebase-app.js",
-			"firebase-auth.js",
-			"firebase-database.js",
+			"FireBaseCore/firebase-app.js",
+			"FireBaseCore/firebase-auth.js",
+			"FireBaseCore/firebase-database.js",
 			"new_back.js",
 			"background.js"
 		]
