@@ -9,7 +9,10 @@ var config = {
     messagingSenderId: "911483901445",
     appId: "1:911483901445:web:8c4577a3f06d59c7006e6c"
 };
-const app = firebase.initializeApp(config);
+var app = firebase.initializeApp(config);
+firebase.auth().signOut();
+var currentUser = firebase.auth().currentUser
+console.log("Current user is: " + currentUser);
 
 const txtEmail = document.getElementById('txtEmail');
 const txtPassword = document.getElementById('txtPassword');
@@ -28,6 +31,22 @@ btnLogout.addEventListener('click', e => {
     firebase.auth().signOut();
 });
 
+txtEmail.addEventListener('keyup', function(key){
+    // For enter key, ascii value is 13
+    if (key.keyCode === 13){
+        key.preventDefault();
+        btnLogin.click();
+    }
+});
+
+txtPassword.addEventListener('keyup', function(key){
+    // For enter key, ascii value is 13
+    if (key.keyCode === 13){
+        key.preventDefault();
+        btnLogin.click();
+    }
+});
+
 btnLogin.addEventListener('click', e => {
     const email = txtEmail.value;
     const pass = txtPassword.value;
@@ -37,16 +56,26 @@ btnLogin.addEventListener('click', e => {
 
 
 firebase.auth().onAuthStateChanged(firebaseUser => {
-    if (firebaseUser)
-        console.log(firebaseUser);
-    else
+    
+    var currentUser = firebase.auth().currentUser
+    if (firebaseUser){
+        console.log(firebaseUser.email);
+        txtEmail.style.visibility = 'hidden';
+        txtPassword.style.visibility = 'hidden';
+        btnLogin.style.visibility = 'hidden';
+        btnSignUp.style.visibility = 'hidden';
+        btnLogout.style.visibility = 'hidden';
+    }
+    else{
         console.log("Not logged in");
+    }
 })
 
 
 var port = chrome.extension.connect({
     name: "Communicate"
 });
+
 
 function print_info(tabs_data){
     var initial = "<tr><th>Website</th><th>Time Spent</th></tr>";
@@ -56,6 +85,7 @@ function print_info(tabs_data){
     var content = ''
     for (id in tabs_data){
         var time = tabs_data[id] / 1000;
+        console.log(time);
         var sec = time%60;
         var min = (time/60)%60;
         var hour = time/3600;
@@ -68,5 +98,7 @@ function print_info(tabs_data){
 
 port.postMessage("Connected");
 port.onMessage.addListener(function(tabs_data){
-    print_info(tabs_data);
+    console.log(currentUser)
+    if (currentUser !== null)
+        print_info(tabs_data);
 });
