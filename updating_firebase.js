@@ -21,13 +21,24 @@ var yyyy = today.getFullYear();
 
 today = dd + '/' + mm + '/' + yyyy;
 
+var user = null
+
+var db;
+
 // CREATE REFERENCE
-const db = firebase.database().ref().child('Internet Usage').child(yyyy).child(mm).child(dd);
-// This will create a new Node
-db.once('value', function(snap){
-    temp_dict = (snap.val());
-    flag_for_sync = true;
-});
+function setUser(User){
+    user = User;
+    db = firebase.database().ref().child('Internet Usage').child(user).child(yyyy).child(mm).child(dd);
+    syncFirebase();
+}
+
+function syncFirebase(){
+    // This will create a new Node
+    db.once('value', function(snap){
+        temp_dict = (snap.val());
+        flag_for_sync = true;
+    });
+}
 
 // Add to the child
 function UpdateInfo(obj){
