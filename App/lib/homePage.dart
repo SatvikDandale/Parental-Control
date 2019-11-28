@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget{
   HomePageState createState() => HomePageState();
@@ -100,7 +101,15 @@ class HomePageState extends State<HomePage>{
     getData();
     getCurrentUser();
   }
-
+  DateTime dob,
+      _fromDay = new DateTime(DateTime.now().year - 18, DateTime.now().month,
+          DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
+  
+   DateTime 
+      _toDay = new DateTime(DateTime.now().year - 18, DateTime.now().month,
+          DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
+  
+  
   @override
   Widget build(BuildContext context){
     // getCurrentUser();
@@ -137,28 +146,139 @@ class HomePageState extends State<HomePage>{
           // 3. Submit Button
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Container(
-              child: Expanded(
-                child: Text("First Date"),
-              ),
-            ),
-            Container(
-              child: Expanded(
-                child: Text("Second Date"),
-              ),
-            ),
-            Divider(),
-            Expanded(
-                child: MaterialButton(
+           DateTimePicker(
+                  labelText: 'From Date:',
+                  selectedDate: _fromDay,
+                  
+                  selectDate: (DateTime date) {
+                    setState(() {
+                      _fromDay = date;
+                    });
+                  },
+                  
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                DateTimePicker(
+                  labelText: 'To Date:',
+                  selectedDate: _toDay,
+                  
+                  selectDate: (DateTime date) {
+                    setState(() {
+                      _toDay = date;
+                    });
+                  },
+                  
+                ),
+                SizedBox(  
+                  height: 20,
+                ),
+                 Divider(),
+              
+                 MaterialButton(
+                color: Colors.blue,
                 child: Text("Submit"),
                 onPressed: (){
                   print(usageDict);
                 },
               ),
-            )
+           
+              ],
+            ),
+          ),
+        );
+    
+  }
+}
+class DateTimePicker extends StatelessWidget {
+  const DateTimePicker({
+    Key key,
+    this.labelText,
+    this.selectedDate,
+    
+    this.selectDate,
+    
+  }) : super(key: key);
+  final String labelText;
+  final DateTime selectedDate;
+  
+  final ValueChanged<DateTime> selectDate;
+  
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1960, 1),
+      lastDate: DateTime(2050),
+    );
+    if (picked != null && picked != selectedDate) selectDate(picked);
+  }
+
+  
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle valueStyle = Theme.of(context).textTheme.title;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: <Widget>[
+        Expanded(
+          flex: 4,
+          child: InputDropdown(
+            labelText: labelText,
+            valueText: DateFormat.yMMMd().format(selectedDate),
+            valueStyle: valueStyle,
+            onPressed: () {
+              _selectDate(context);
+            },
+          ),
+        ),
+        const SizedBox(width: 12.0),
+        
+        
+      ],
+    );
+  }
+}
+
+class InputDropdown extends StatelessWidget {
+  const InputDropdown({
+    Key key,
+    this.child,
+    this.labelText,
+    this.valueText,
+    this.valueStyle,
+    this.onPressed,
+  }) : super(key: key);
+  final String labelText;
+  final String valueText;
+
+  final TextStyle valueStyle;
+  final VoidCallback onPressed;
+  final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: labelText,
+        ),
+        baseStyle: valueStyle,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(valueText, style: valueStyle),
+            Icon(
+              Icons.arrow_drop_down,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.grey.shade700
+                  : Colors.white70,
+            ),
           ],
-        )
-      )
+        ),
+      ),
     );
   }
 }
