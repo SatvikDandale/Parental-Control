@@ -94,25 +94,65 @@ class HomePageState extends State<HomePage>{
     });
   }
 
+  void _showDialog(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: new Text("Zero Time Usage"),
+          content: new Text("The Internet Usage of your child on this day is ZERO. YAY!"),
+        );
+      }
+    );
+  }
+
   void getData(){
     int days = _toDay.difference(_fromDay).inDays; // The no of days in between.
-        
-    // Now for each day in between, get the data from firebase.
-    for(int i=0; i < days; i++){
-      var iterationDate = _fromDay.add(new Duration(days: i));
-      getDictOfDate(iterationDate);
+      
+    if (days == 0)
+      getDictOfDate(_toDay);
+    else if (days < 0){
+      DateTime temp = _toDay;
+      _toDay = _fromDay;
+      _fromDay = temp;
+      days *= -1;
     }
+    else{
+      // Now for each day in between, get the data from firebase.
+      for(int i=0; i < days; i++){
+        var iterationDate = _fromDay.add(new Duration(days: i));
+        getDictOfDate(iterationDate);
+      }
+    }
+    
     // After this iteration, the global dict must have been completely updated
     // Set an periodic interval until the dict gets updated.
     Timer.periodic(Duration(seconds: 2), (timer) {
       print(timer.tick);
       if (iterationCount > 0){
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => new Stats(usageList)
-          )
-        );
+        
+
+        if (usageList != null){
+          // First sort the usage list in descending order of the usage
+          usageList.sort((b, a){
+            if (a.totalUsage < b.totalUsage)
+              return -1;
+            else if (a.totalUsage == b.totalUsage)
+              return 0;
+            return 1;
+          });
+          usageList = usageList.sublist(0, 5);
+          // We need only top 5 websites. Not more    
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => new Stats(usageList)
+            )
+          );
+        }
+        else{
+          _showDialog();
+        }
         timer.cancel();
       }
     });
