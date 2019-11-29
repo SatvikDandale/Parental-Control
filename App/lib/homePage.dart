@@ -3,6 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'usage.dart';
+import 'stats.dart';
 
 class HomePage extends StatefulWidget{
   HomePageState createState() => HomePageState();
@@ -14,8 +16,15 @@ class HomePageState extends State<HomePage>{
   String currentUser = "";
   String currentUserEmail = "";
   FirebaseAuth auth = FirebaseAuth.instance;
-  var usageDict = {};
+  DateTime _fromDay = new DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
+  DateTime _toDay = new DateTime(DateTime.now().year, DateTime.now().month,
+          DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
+  
+  List<Usage> usageList;
+  // This will contain a list of websites and their corresponding usage
   var iterationCount = 0;
+
 
   void getCurrentUser() async{
     user = await auth.currentUser();
@@ -27,16 +36,29 @@ class HomePageState extends State<HomePage>{
 
   void appendDict(newDict){
     // This function will be called everytime a new usage dict of a particular day is retrieved
-    // and the usage is to be added to the global usageDict
+    // For every website in the given dictionary:
+    //    1. Go to the element in the list "usageList" containing this website
+    //    2. Add the current time to the already existing time usage
+    //    3. If the element does not exist, append a new element with new website and time usage
+
+    print(newDict);
+
     newDict.forEach((key, value){ // key is the website name and the value is the internet usage
-      // Check if this key exist in the global Dictionary
-      if (usageDict.containsKey(key)){
-        // Then add the new time with the existing time
-        usageDict[key] += newDict[key];
+      // Check if this website exists in the "usageList"
+      if (usageList != null){
+        int index = usageList.indexWhere((element) => element.site.contains(key));
+        if (index != -1){
+          // The website already exists in the list.
+          usageList[index].totalUsage += value;
+        }
+        else{
+          // Else create a new key of the new website in the global dictionary
+          usageList.add(new Usage(key, value));
+        }
       }
       else{
         // Else create a new key of the new website in the global dictionary
-        usageDict.addAll({key: value});
+        usageList = [new Usage(key, value)];
       }
     });
   }
@@ -73,13 +95,11 @@ class HomePageState extends State<HomePage>{
   }
 
   void getData(){
-    var date1 = new DateTime.utc(2019, 10, 10);
-    var date2 = new DateTime.utc(2019, 10, 14);
-
-    int days = date2.difference(date1).inDays; // The no of days in between.
+    int days = _toDay.difference(_fromDay).inDays; // The no of days in between.
+        
     // Now for each day in between, get the data from firebase.
     for(int i=0; i < days; i++){
-      var iterationDate = date1.add(new Duration(days: i));
+      var iterationDate = _fromDay.add(new Duration(days: i));
       getDictOfDate(iterationDate);
     }
     // After this iteration, the global dict must have been completely updated
@@ -87,27 +107,23 @@ class HomePageState extends State<HomePage>{
     Timer.periodic(Duration(seconds: 2), (timer) {
       print(timer.tick);
       if (iterationCount > 0){
-        print(usageDict);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => new Stats(usageList)
+          )
+        );
         timer.cancel();
       }
     });
     
-
   }
 
   @override
   void initState(){
     super.initState();
-    getData();
     getCurrentUser();
   }
-  DateTime dob,
-      _fromDay = new DateTime(DateTime.now().year - 18, DateTime.now().month,
-          DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
-  
-   DateTime 
-      _toDay = new DateTime(DateTime.now().year - 18, DateTime.now().month,
-          DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
   
   
   @override
@@ -146,16 +162,14 @@ class HomePageState extends State<HomePage>{
           // 3. Submit Button
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-           DateTimePicker(
+          DateTimePicker(
                   labelText: 'From Date:',
                   selectedDate: _fromDay,
-                  
                   selectDate: (DateTime date) {
                     setState(() {
                       _fromDay = date;
                     });
                   },
-                  
                 ),
                 SizedBox(
                   height: 20,
@@ -163,24 +177,21 @@ class HomePageState extends State<HomePage>{
                 DateTimePicker(
                   labelText: 'To Date:',
                   selectedDate: _toDay,
-                  
                   selectDate: (DateTime date) {
                     setState(() {
                       _toDay = date;
                     });
                   },
-                  
                 ),
                 SizedBox(  
                   height: 20,
                 ),
-                 Divider(),
-              
-                 MaterialButton(
+                Divider(),
+                MaterialButton(
                 color: Colors.blue,
                 child: Text("Submit"),
                 onPressed: (){
-                  print(usageDict);
+                  getData();
                 },
               ),
            

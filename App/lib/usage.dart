@@ -1,13 +1,11 @@
 class Usage
 {
-    final int totalUsage;
-    final String site;
+    int totalUsage;
+    String site;
     
 
-    Usage
-    ({
-      this.totalUsage,
-      this.site,
-      
-    });
+    Usage(site, totalUsage){
+      this.site = site;
+      this.totalUsage = totalUsage;
+    }
 }

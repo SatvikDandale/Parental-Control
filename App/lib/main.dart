@@ -3,8 +3,7 @@
 */
 
 import 'package:flutter/material.dart';
-import 'package:parental_monitor/homePage.dart';  // If successful loggin
-import 'package:parental_monitor/newUserPage.dart'; // New User
+import 'package:parental_monitor/homePage.dart';  // If successful login
 import 'authPage.dart'; // Existing user. Default page always.
 
 
@@ -23,7 +22,6 @@ class MyApp extends StatelessWidget{
         '/AuthPage' : (context) => AuthPage(),
         //'/SignUp' : () => 
         '/HomePage' : (context) => HomePage(),
-        '/SignUpPage': (context) => SignUp(),
 
       },
     );
