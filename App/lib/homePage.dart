@@ -7,12 +7,15 @@ import 'usage.dart';
 import 'stats.dart';
 
 class HomePage extends StatefulWidget{
+  final FirebaseUser user;
+  const HomePage(this.user);
+
+  @override
   HomePageState createState() => HomePageState();
 }
 
 class HomePageState extends State<HomePage>{
   final DatabaseReference db = FirebaseDatabase.instance.reference();
-  FirebaseUser user;
   String currentUser = "";
   String currentUserEmail = "";
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -24,15 +27,6 @@ class HomePageState extends State<HomePage>{
   List<Usage> usageList;
   // This will contain a list of websites and their corresponding usage
   var iterationCount = 0;
-
-
-  void getCurrentUser() async{
-    user = await auth.currentUser();
-    setState(() {
-      currentUserEmail = user.email;
-      currentUser = currentUserEmail.replaceAll(RegExp(r'@\w+\.\w+'), "");
-    });
-  }
 
   void appendDict(newDict){
     // This function will be called everytime a new usage dict of a particular day is retrieved
@@ -162,7 +156,10 @@ class HomePageState extends State<HomePage>{
   @override
   void initState(){
     super.initState();
-    getCurrentUser();
+    print(widget.user);
+    currentUserEmail = widget.user.email;
+    currentUser = currentUserEmail.replaceAll(RegExp(r'@\w+.\w+'), "");
+    
   }
   
   

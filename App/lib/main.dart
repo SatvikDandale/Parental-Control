@@ -20,9 +20,6 @@ class MyApp extends StatelessWidget{
       // First Screen is AuthPage
       routes: {
         '/AuthPage' : (context) => AuthPage(),
-        //'/SignUp' : () => 
-        '/HomePage' : (context) => HomePage(),
-
       },
     );
   }

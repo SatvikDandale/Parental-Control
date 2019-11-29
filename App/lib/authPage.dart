@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:parental_monitor/homePage.dart';
 
 class AuthPage extends StatefulWidget{
   AuthPageState createState() => AuthPageState();
@@ -68,10 +69,15 @@ class AuthPageState extends State<AuthPage>{
       print(e.toString());
     }
     finally{
-      
       if (user != null) {
         print("Successful");
-        Navigator.pushNamed(context, '/HomePage');
+        // Go to homePage by passing the current user details.
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => new HomePage(user)
+          )
+        );
       } else{
         print("Error");
         if (_formType == FormTypes.logIn)
