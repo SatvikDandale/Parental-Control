@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'package:parental_monitor/dataDisplay.dart';
 import 'usage.dart';
 import 'stats.dart';
 
@@ -23,7 +24,7 @@ class HomePageState extends State<HomePage>{
           DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
   DateTime _toDay = new DateTime(DateTime.now().year, DateTime.now().month,
           DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
-  
+  List<Usage> temp_usageList;
   List<Usage> usageList;
   // This will contain a list of websites and their corresponding usage
   var iterationCount = 0;
@@ -100,7 +101,7 @@ class HomePageState extends State<HomePage>{
     );
   }
 
-  void getData(){
+  void getData(String str){
     int days = _toDay.difference(_fromDay).inDays; // The no of days in between.
       
     if (days == 0)
@@ -135,14 +136,27 @@ class HomePageState extends State<HomePage>{
               return 0;
             return 1;
           });
-          usageList = usageList.sublist(0, 5);
+           
+          temp_usageList = usageList.sublist(0, 5);
           // We need only top 5 websites. Not more    
-          Navigator.push(
+         if(str == "graph")
+         {
+            Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => new Stats(usageList)
+              builder: (context) => new Stats(temp_usageList)
             )
           );
+         }
+         else
+         {
+            Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => new dataDisplay(usageList)
+            )
+          );
+         }
         }
         else{
           _showDialog();
@@ -226,12 +240,18 @@ class HomePageState extends State<HomePage>{
                 Divider(),
                 MaterialButton(
                 color: Colors.blue,
-                child: Text("Submit"),
+                child: Text("Get Graph"),
                 onPressed: (){
-                  getData();
+                  getData("graph");
                 },
               ),
-           
+              MaterialButton(
+                color: Colors.blue,
+                child: Text("Get Data"),
+                onPressed: (){
+                  getData("data");
+                },
+              ),
               ],
             ),
           ),
