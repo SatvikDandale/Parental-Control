@@ -1,3 +1,4 @@
+import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:parental_monitor/homePage.dart';
@@ -105,16 +106,20 @@ class AuthPageState extends State<AuthPage>{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text('Authenticate'),
+        title: Text('Parental monitor system'),
+        backgroundColor: Colors.red,
       ),
-      body: Container(
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: inputForms() + buttons(),
-              
+      body: Center(
+        child: Container(
+          
+          padding: EdgeInsets.all(20),
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: inputForms() + buttons(),
+                
+            ),
           ),
         ),
       ),
@@ -141,9 +146,12 @@ class AuthPageState extends State<AuthPage>{
     if (_formType == FormTypes.logIn){
       return [
         new RaisedButton(
+          shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
+            color: Colors.red,
           child: Text(
             'Log In',
-            style: TextStyle(fontSize: 20)
+            style: TextStyle(fontSize: 20,color: Colors.white)
           ),
           onPressed: (){
             if (validateForm())
@@ -151,9 +159,12 @@ class AuthPageState extends State<AuthPage>{
           },
         ),
         new RaisedButton(
+          shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
+            color: Colors.red,
           child: Text(
             'Create new User',
-            style: TextStyle(fontSize: 20)
+            style: TextStyle(fontSize: 20,color: Colors.white)
           ),
           onPressed: (){
             shiftToSignUp();

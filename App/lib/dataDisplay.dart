@@ -14,6 +14,7 @@ class dataDisplay extends StatelessWidget
     return Scaffold(
       appBar: AppBar(
         title: Text("Total usage of sites is"),
+        backgroundColor: Colors.red,
       ),
       body: Column(
         children: <Widget>[

@@ -183,6 +183,7 @@ class HomePageState extends State<HomePage>{
     return Scaffold(
       appBar: AppBar(
         title: Text('Logged In'),
+        backgroundColor: Colors.red,
       ),
       drawer: Drawer(
         child: ListView(
@@ -193,7 +194,7 @@ class HomePageState extends State<HomePage>{
               currentAccountPicture: CircleAvatar(
                 backgroundColor: 
                   Theme.of(context).platform == TargetPlatform.iOS
-                    ? Colors.blue
+                    ? Colors.red
                     : Colors.white,
                   child: Text(
                     currentUser.substring(0, 1),
@@ -201,6 +202,31 @@ class HomePageState extends State<HomePage>{
                     ),
               ),
             ),
+            ListTile(
+              title: Text("Get Graph",style: TextStyle(fontSize: 25,color: Colors.black)),
+              onTap: (){
+                getData("graph");
+                /*Navigator.push(context, MaterialPageRoute(
+                  builder: (context)=> Stats(temp_usageList)
+                ));*/
+              },
+            ),
+            ListTile(
+              title: Text("Get Data",style: TextStyle(fontSize: 25,color: Colors.black),),
+              onTap: (){
+                /*Navigator.push(context, MaterialPageRoute(
+                  builder: (context)=> dataDisplay(usageList)
+                ));*/
+                getData("data");
+              },
+            ),
+            ListTile(
+              title: Text("Log out",style: TextStyle(fontSize: 25,color: Colors.black),),
+              onTap: (){
+                FirebaseAuth.instance.signOut();
+              },
+            ),
+
           ],
         ),
       ),
@@ -239,19 +265,19 @@ class HomePageState extends State<HomePage>{
                 ),
                 Divider(),
                 MaterialButton(
-                color: Colors.blue,
+                color: Colors.red,
                 child: Text("Get Graph"),
                 onPressed: (){
                   getData("graph");
                 },
               ),
-              MaterialButton(
+              /*MaterialButton(
                 color: Colors.blue,
                 child: Text("Get Data"),
                 onPressed: (){
                   getData("data");
                 },
-              ),
+              ),*/
               ],
             ),
           ),
