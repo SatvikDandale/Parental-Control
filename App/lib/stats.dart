@@ -26,7 +26,9 @@ class StatsState extends State<Stats>{
     return Scaffold(
       appBar: AppBar(
         title: Text("Statistics"),
+        backgroundColor: Colors.red,
       ),
+      
       body: Container(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
