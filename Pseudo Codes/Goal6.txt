@@ -1,0 +1,47 @@
+Goal: Notify Browsing Status
+
+----Chrome Extension----
+
+{background.js}
+
+block request:
+    if the URL includes "googleapis"
+        return the cancel attribute as false
+    else
+        return the cancel attribute as true
+
+filter:
+    if chrome has a Listener on webRequest with block request:
+        remove the listener
+    if status is false:
+        set a listener on chrome's webRequest API with a block request
+
+update the filters with status as false at the start
+
+after every fixed interval:
+    if loggedInFlag is true:
+        retrieve the time limit from the firebase database
+        from the tabs_data dict get the website of highest time usage
+        if the highest time usage from the local dict is less than retrieved time:
+            update tabs data locally:
+                call the updateInfo function
+            update tabs data usage in firebase:
+                call the Update function
+        else:
+            update the filters:
+                block the website with the highest time usage
+            set the blocked variable true in the firebase database:
+                set the child to the name of the block website
+            in the firebase messaging service instance
+            send a message to the device with a preset device ID:
+                message has website name and the time usage details.
+
+----Android----
+
+{main.dart}
+
+initialize the firebase messaging service instance
+
+call the getToken function on the messaging instance:
+    after completion of this asynchronous process:
+        display the message 

@@ -1,0 +1,32 @@
+Goal: Monitor Browsing Registry
+----Chrome Extension----
+
+{background.js}
+
+block request:
+    if the URL includes "googleapis"
+        return the cancel attribute as false
+    else
+        return the cancel attribute as true
+
+filter:
+    if chrome has a Listener on webRequest with block request:
+        remove the listener
+    if status is false:
+        set a listener on chrome's webRequest API with a block request
+
+update the filters with status as false at the start
+
+if message received on port "Communicate":
+    if message is "Logged In":
+        update the filter with status as  true
+    if message is "Logged Out":
+        update the filter with status as false
+    if message includes the string "User":
+        set the current user as the given user in message
+        call the setUser function
+    if message is "Status":
+        if LoggedIn flag is true:
+            send message on the same port as "YES"
+        else:
+            send message on the same port as "NO"

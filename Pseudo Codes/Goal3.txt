@@ -1,0 +1,43 @@
+Goal: Classify Browsing History
+----Chrome Extension----
+
+{background.js}
+
+if message received on port "Communicate":
+    if message includes the string "User":
+        set the current user as the given user in message
+        call the setUser function
+
+{updating_firebase.js}
+
+create a config variable containing firebase API keys
+Initialise firebase App from the config variable
+set default value of localUser to null
+create a dictionary temp_dict to temporarily store the tabs information from firebase
+create a flag for sync with false as default value
+create a flag for update with false as default value
+
+
+function syncFirebase:
+    get a snapshot of the database before updating it
+    update the temp_dict with the firebase data
+    update the sync flag to true
+    
+
+function setUser:
+    set localUser as received user
+    Initialise firebase database with current user and current date
+    call the syncFirebase function
+
+function UpdateInfo:
+    if sync flag is true:
+        if update flag is false:
+            for each website in the given dictionary:
+                if this website exists in temp_dict:
+                    update the tabs info with the old info into the given dictionary                
+            change update flag to true
+        update the database with the new given dictionary
+
+get the current date
+separate date into day, month and year
+create a string with current date with proper format

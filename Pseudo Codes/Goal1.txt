@@ -1,1 +1,84 @@
 Goal: Create User Profile
+----Chrome Extension----
+
+{logInPage.js}
+create a config variable containing firebase API keys
+Initialise firebase App from the config variable
+
+if firebase authState changes:
+    get current User
+    if user exists:
+        send "Logged In" onto the port "Communicate"
+        send user info to background script
+        redirect window to homepage
+
+get signUp button as element from LogInpage
+
+if signUp button is pressed:
+    get email from txtEmail tag
+    get password from txtPassword tag
+    event = signUp in firebase using email and password
+    check error in event after completion
+
+get logInPage button as element from LogInpage
+
+if logIn button is pressed:
+    get email from txtEmail tag
+    get password from txtPassword tag
+    event = signIn to firebase using email and password
+    check error in event after completion
+
+{background.js}
+set default value of loggedInFlag as false
+
+if message received on port "Communicate":
+    if message is "Logged In":
+        set loggedInFlag to true
+    if message is "Logged Out":
+        set loggedInFlag to false
+
+============================================================
+----Android----
+
+{authPage.dart}
+create firebase instance
+
+if formType is LogIn:
+    get credentials from the form on the page
+    event = logIn to firebase with email and password using the instance
+    check errors in event after completion
+    if successful:
+        navigate to HomePage
+    else:
+        generate dialogBox to show the error
+
+if formType is SignUp:
+    get credentials from the form page
+    event = signUp to firebase with email and password
+    check errors in event after completion
+    if successful:
+        navigate to HomePage
+    else:
+        generate dialogBox to show the error
+
+main function:
+    return a scaffold:
+        return a column:
+            1. Input Forms
+                Email
+                Password
+            2. Buttons
+                if formType is logIn:
+                    i. Raised Button of "LogIn":
+                        if pressed:
+                            execute logIn function
+                    ii. Raised Button of "Create User":
+                        if pressed:
+                            shift to signUp
+                else:
+                    i. Raised Button of "Create New User":
+                        if pressed:
+                            execute signUp function
+                    ii. Raised Button of "Already a User? Log In"
+                        if pressed:
+                            shift to logIn

@@ -1,0 +1,35 @@
+Goal: Extract Browsing References
+----Chrome Extension----
+{background.js}
+
+create a config variable containing firebase API keys
+Initialise firebase App from the config variable
+create a dictionary of tabs information
+set a fixed interval in milliseconds
+set default value of loggedInFlag as false
+
+function get domain name from tab:
+    split the URL and remove "https://"
+    and remove anything after .com/.org
+    return the remaining part
+    
+
+function update tabs data locally:
+    get tabs information from chrome
+    for every each tab retrieved from chrome:
+        get domain name of this tab
+        add the usage of this tab to the local dictionary:
+            the usage will be the fixed interval after which this is repeated
+        update the local dictionary
+
+function update tabs data in firebase:
+    get the reference to the database
+    call the update function (in API):
+        pass the data as JSON dictionary
+
+after every fixed interval:
+    if loggedInFlag is true:
+        update tabs data locally:
+            call the updateInfo function
+        update tabs data usage in firebase:
+            call the Update function

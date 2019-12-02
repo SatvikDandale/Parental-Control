@@ -1,0 +1,45 @@
+Goal: Generate Browsing Statistics
+----Android----
+
+{homePage.dart}
+
+function getDict:
+    if the day is less than 10: 
+        add a zero at the beginning
+    if the month is less than 10: 
+        add a zero at the beginning
+    create a new date with the updated day, month and year
+    create a firebase database reference with the new date
+    wait for this asynchronous function to complete:
+        append the newly obtained dictionary with the locally stored internet usage list
+        increment iteration count variable by 1
+    
+
+function getData:
+    Verify the string of day and month
+    count the number of days between the two given dates
+    for each of the date in between:
+        call the getDict function
+    check if the iteration count variable is true:
+        if the usage list is not empty:
+            sort the usage list in descending order according to the usage time
+            if user wants graphical data:
+                top 5 websites and Bar Graph is generated
+                Push new page of Stats() in navigator
+            else:
+                all websites and their data is shown in list
+
+create a widget for starting date
+create a widget for ending date
+create a submit button
+
+on clicking the submit button:
+    adjust the format of both the dates into the DateTime format of Flutter
+    call the getData function
+
+
+{stats.dart}
+
+Create a series for the charts class and pass the usageList in it
+Generate a scaffold:
+    child is the bar graph widget and pass the series in the class
