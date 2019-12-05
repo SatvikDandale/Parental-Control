@@ -42,14 +42,19 @@ function print_info(tabs_data){
     document.getElementById("table").insertAdjacentHTML('afterbegin', initial);
     var content = ''
     for (id in tabs_data){
-        var time = tabs_data[id] / 1000;
+        var time = tabs_data[id];
         console.log(time);
-        var sec = time%60;
-        var min = (time/60)%60;
         var hour = time/3600;
-        //var content = "<strong>" + id + "</strong>: " + + hour.toFixed(0) + " hours : " + min.toFixed(0) + " mins : " + sec + " secs<br />";
+        time %= 3600;
+        var min = time/60;
+        time %= 60;
+        var sec = time%60;
 
-        content += "<tr><td><strong>" + id + "</strong></td><td>" + hour.toFixed(0) + " hours : " + min.toFixed(0) + " mins : " + sec*1000/*(secs are in msec)*/ + " secs" + "</td></tr>";
+        content += "<tr><td><strong>" + id + "</strong></td><td>" 
+                + hour.toString().replace(/\.\d+/g, "") 
+                + " hours : " + min.toString().replace(/\.\d+/g, "") 
+                + " mins : " + sec
+                + " secs" + "</td></tr>";
     }
     document.getElementById("table").innerHTML  = content;
 }
