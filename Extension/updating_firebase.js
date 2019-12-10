@@ -76,7 +76,11 @@ function UpdateInfo(obj){
                 flag_for_update = true; // We only have to update temp_dict with obj once
             }
         }
-        //console.log(obj);
+        for(var website in obj){
+            if (website === "")
+                delete obj[website];
+        }
+        console.log(obj);
         db.update(obj);
     }
 }

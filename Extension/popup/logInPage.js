@@ -1,5 +1,9 @@
 console.log("Loginpage.js")
 
+document.getElementById("form1").addEventListener('submit', function(event){
+    event.preventDefault();
+});
+
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyC5VDpdFZVH3OuzN_sbnMAiMIq9gac39WQ",
@@ -35,11 +39,15 @@ const txtPassword = document.getElementById('txtPassword');
 const btnLogin = document.getElementById('btnLogin');
 const btnSignUp = document.getElementById('btnSignUp');
 
+// btnSignUp.addEventListener('click', e => {
+//     const email = txtEmail.value;
+//     const pass = txtPassword.value;
+//     const promise = firebase.auth().createUserWithEmailAndPassword(email, pass);
+//     promise.catch(e => console.log(e.message));
+// });
+
 btnSignUp.addEventListener('click', e => {
-    const email = txtEmail.value;
-    const pass = txtPassword.value;
-    const promise = firebase.auth().createUserWithEmailAndPassword(email, pass);
-    promise.catch(e => console.log(e.message));
+    window.location.replace("signUp.html");
 });
 
 txtEmail.addEventListener('keyup', function(key){

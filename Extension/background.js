@@ -1,7 +1,7 @@
 
 /*
     #####################
-    BLOCK WEBSITES IF NOT LOGGED IN
+    BLOCK WEBSITES
     #####################
 */
 

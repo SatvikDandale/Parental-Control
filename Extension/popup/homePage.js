@@ -22,7 +22,7 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
     else{
         console.log("Not logged in");
         port.postMessage("Logged Out");
-        window.location.replace("logInPage.html");
+        window.location.replace("index.html");
     }
 });
 
