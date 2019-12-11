@@ -11,14 +11,15 @@ import 'stats.dart';
 
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
-  const HomePage(this.user);
+  final List<String> childrenList;
+  const HomePage(this.user, this.childrenList);
 
   @override
   HomePageState createState() => HomePageState();
 }
 
 class HomePageState extends State<HomePage> {
-  String tempChild = "child1";
+  String currentChild;
   final DatabaseReference db = FirebaseDatabase.instance.reference();
   String currentUser = "";
   String currentUserEmail = "";
@@ -31,6 +32,16 @@ class HomePageState extends State<HomePage> {
   List<Usage> usageList;
   // This will contain a list of websites and their corresponding usage
   var iterationCount = 0;
+  
+  @override
+  void initState() {
+    super.initState();
+    print(widget.user);
+    currentUserEmail = widget.user.email;
+    currentUser = currentUserEmail.replaceAll(RegExp(r'@\w+.\w+'), "");
+
+    currentChild = widget.childrenList[0];
+  }
 
   void appendDict(newDict) {
     // This function will be called everytime a new usage dict of a particular day is retrieved
@@ -81,7 +92,7 @@ class HomePageState extends State<HomePage> {
 
     DatabaseReference dbTemp = db
         .child("Internet Usage")
-        .child(tempChild)
+        .child(currentChild.replaceAll(RegExp(r'@\w+.\w+'), ""))
         .child(date.year.toString())
         .child(monthString)
         .child(dayString);
@@ -138,7 +149,11 @@ class HomePageState extends State<HomePage> {
             return 1;
           });
 
-          tempUsageList = usageList.sublist(0, 5);
+          try{
+            tempUsageList = usageList.sublist(0, 5);
+          }catch(e){
+            tempUsageList = usageList.sublist(0, usageList.length);
+          }
           // We need only top 5 websites. Not more
           if (str == "graph") {
             Navigator.push(
@@ -159,13 +174,6 @@ class HomePageState extends State<HomePage> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    print(widget.user);
-    currentUserEmail = widget.user.email;
-    currentUser = currentUserEmail.replaceAll(RegExp(r'@\w+.\w+'), "");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -208,18 +216,30 @@ class HomePageState extends State<HomePage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Categories(tempChild)));
+                          builder: (context) => Categories(currentChild)));
                 },
               ),
-              /*ListTile(
-                title: Text("Get Data",style: TextStyle(fontSize: 25,color: Colors.black),),
-                onTap: (){
-                  /*Navigator.push(context, MaterialPageRoute(
-                    builder: (context)=> dataDisplay(usageList)
-                  ));*/
-                  getData("data");
-                },
-              ),*/
+              ExpansionTile(
+                leading: Icon(Icons.child_care),
+                title: Text(
+                  "Children",
+                  style: TextStyle(fontSize: 25, color: Colors.black),
+                ),
+                children: new List.generate(widget.childrenList.length, (int index){
+                  return ListTile(
+                    title: Text(
+                      widget.childrenList[index],
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                    onTap: (){
+                      setState(() {
+                        currentChild = widget.childrenList[index];  
+                      });
+                      Navigator.of(context).pop();
+                    },
+                  );
+                })
+              ),
               ListTile(
                 leading: Icon(Icons.power_settings_new),
                 title: Text(
@@ -239,12 +259,31 @@ class HomePageState extends State<HomePage> {
       body: Container(
         padding: EdgeInsets.all(20),
         child: Column(
-          // We will have three rows.
+          // We will have four rows.
+          // 0. Current Child
           // 1. Start Date
           // 2. End Date
           // 3. Submit Button
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    "Current Child: ",
+                    style: TextStyle(fontSize: 20, color: Colors.black, fontWeight: FontWeight.bold)
+                  ),
+                  Text(
+                    currentChild,
+                    style: TextStyle(fontSize: 20, color: Colors.green, fontWeight: FontWeight.bold)
+                  ),
+                ],
+              )
+            ),
+            SizedBox(
+              height: 20,
+            ),
             DateTimePicker(
               labelText: 'From Date:',
               selectedDate: _fromDay,

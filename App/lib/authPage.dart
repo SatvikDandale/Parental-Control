@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:parental_monitor/homePage.dart';
@@ -16,6 +17,7 @@ class AuthPageState extends State<AuthPage>{
   String _email = "";
   String _password = "";
   FormTypes _formType = FormTypes.logIn;
+  DatabaseReference db = FirebaseDatabase.instance.reference();
 
   void shiftToSignUp(){
     // For toggling between pages
@@ -72,12 +74,32 @@ class AuthPageState extends State<AuthPage>{
       if (user != null) {
         print("Successful");
         // Go to homePage by passing the current user details.
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => new HomePage(user)
-          )
-        );
+        
+        String userName = user.email.replaceAll(RegExp(r'@\w+.\w+'), "");
+        List<String> childrenList;
+
+        db = db.child("Internet Usage").child(userName).child("Children");
+        db.once().then((DataSnapshot childSnapShot){
+          var childrenDict = childSnapShot.value;
+          for (String childNumber in childrenDict.keys){
+            if (childrenList == null){
+              childrenList = [childrenDict[childNumber]];
+            }
+            else{
+              childrenList.add(childrenDict[childNumber]);
+            }
+          }
+          childrenList.sort((a, b) {
+            return a.toLowerCase().compareTo(b.toLowerCase());
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => new HomePage(user, childrenList)
+            )
+          );
+        });
+        
       } else{
         print("Error");
         if (_formType == FormTypes.logIn)
