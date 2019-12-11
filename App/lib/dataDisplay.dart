@@ -22,7 +22,7 @@ class DataDisplay extends StatelessWidget
             child: ListView.builder(
               itemCount: usageList.length,
               itemBuilder: (BuildContext ctxt, int i){
-                  return forCard(usageList[i].site, usageList[i].totalUsage);
+                  return forCard(usageList[i].site.replaceAll("_", "."), usageList[i].totalUsage);
               },
             ),
           )

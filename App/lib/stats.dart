@@ -19,7 +19,7 @@ class StatsState extends State<Stats>{
       charts.Series(
         id: "Subscribers",
         data: widget.usageList,
-        domainFn: (Usage series, _) => series.site.replaceAll(RegExp(r'www_'), "").replaceAll(RegExp(r'_\w+'), ""),
+        domainFn: (Usage series, _) => series.site.replaceAll(RegExp(r'www_'), "").replaceAll(RegExp(r'_(com|gov|org|in)'), "").replaceAll("_", "."),
         measureFn: (Usage series, _) => series.totalUsage,
       )
     ];
@@ -30,6 +30,7 @@ class StatsState extends State<Stats>{
       ),
       
       body: Container(
+        padding: EdgeInsets.only(bottom: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -41,7 +42,17 @@ class StatsState extends State<Stats>{
               ),
               Expanded(
                 child:
-                  charts.BarChart(series, animate: true),
+                  charts.BarChart(
+                    series,
+                    animate: true,
+                    domainAxis: new charts.OrdinalAxisSpec(
+                      renderSpec: charts.SmallTickRendererSpec(
+                        //
+                        // Rotation Here, 
+                        labelRotation: 30,
+                      ),
+                    ),
+                  ),
               )
             ],
         ),

@@ -107,6 +107,7 @@ class CategoryLimit extends State<SetCategoryLimit> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.red,
           title: Text(widget.category),
           actions: <Widget>[
             IconButton(

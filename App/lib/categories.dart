@@ -50,7 +50,13 @@ class CategoriesState extends State<Categories>{
         backgroundColor: Colors.red,
         title: Text("Categories"),
       ),
-      body: SafeArea(
+      body: Container(
+        decoration: new BoxDecoration(boxShadow: [
+          new BoxShadow(
+            color: Colors.grey[200],
+            blurRadius: 10.0,
+          ),
+        ]),
         child: Column(
           children: <Widget>[
             Expanded(
@@ -67,17 +73,19 @@ class CategoriesState extends State<Categories>{
     );
   }
 Widget forCard(String category) {
-    return Card(
-      margin: EdgeInsets.all(15),
-      child: ListTile(
-        title: new Text(
-          category,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 25),
+    return Container(
+      child: Card(
+        margin: EdgeInsets.all(15),
+        child: ListTile(
+          title: new Text(
+            category,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 25),
+          ),
+          onTap: (){
+            getData(category);
+          },
         ),
-        onTap: (){
-          getData(category);
-        },
       ),
     );
   }
