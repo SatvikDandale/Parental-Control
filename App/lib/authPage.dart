@@ -1,4 +1,3 @@
-import 'package:charts_flutter/flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:parental_monitor/homePage.dart';
@@ -106,7 +105,7 @@ class AuthPageState extends State<AuthPage>{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text('Parental monitor system'),
+        title: Text('Parental Monitor System'),
         backgroundColor: Colors.red,
       ),
       body: Center(
@@ -174,8 +173,11 @@ class AuthPageState extends State<AuthPage>{
     }
     return [
       new RaisedButton(
+        shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
+            color: Colors.red,
         child: Text(
-          'Create new User',
+          'Create New User',
           style: TextStyle(fontSize: 20)
         ),
         onPressed: (){
@@ -184,6 +186,9 @@ class AuthPageState extends State<AuthPage>{
         },
       ),
       new RaisedButton(
+        shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
+            color: Colors.red,
         child: Text(
           'Already a User? Log In',
           style: TextStyle(fontSize: 20)

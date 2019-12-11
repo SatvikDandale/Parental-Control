@@ -3,6 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
+import 'package:parental_monitor/authPage.dart';
+import 'package:parental_monitor/categories.dart';
 import 'package:parental_monitor/dataDisplay.dart';
 import 'usage.dart';
 import 'stats.dart';
@@ -16,6 +18,8 @@ class HomePage extends StatefulWidget{
 }
 
 class HomePageState extends State<HomePage>{
+
+  String tempChild = "child1";
   final DatabaseReference db = FirebaseDatabase.instance.reference();
   String currentUser = "";
   String currentUserEmail = "";
@@ -24,7 +28,7 @@ class HomePageState extends State<HomePage>{
           DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
   DateTime _toDay = new DateTime(DateTime.now().year, DateTime.now().month,
           DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
-  List<Usage> temp_usageList;
+  List<Usage> tempUsageList;
   List<Usage> usageList;
   // This will contain a list of websites and their corresponding usage
   var iterationCount = 0;
@@ -78,7 +82,7 @@ class HomePageState extends State<HomePage>{
     else
       monthString = date.month.toString();
     
-    DatabaseReference dbTemp = db.child("Internet Usage").child(date.year.toString()).child(monthString).child(dayString);
+    DatabaseReference dbTemp = db.child("Internet Usage").child(tempChild).child(date.year.toString()).child(monthString).child(dayString);
     await dbTemp.once().then((DataSnapshot data){
       // print("Current date is:" + date.month.toString() + " " + date.day.toString());
       // print(data.value.toString());
@@ -137,14 +141,14 @@ class HomePageState extends State<HomePage>{
             return 1;
           });
            
-          temp_usageList = usageList.sublist(0, 5);
+          tempUsageList = usageList.sublist(0, 5);
           // We need only top 5 websites. Not more    
          if(str == "graph")
          {
             Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => new Stats(temp_usageList)
+              builder: (context) => new Stats(tempUsageList)
             )
           );
          }
@@ -153,7 +157,7 @@ class HomePageState extends State<HomePage>{
             Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => new dataDisplay(usageList)
+              builder: (context) => new DataDisplay(usageList)
             )
           );
          }
@@ -203,15 +207,16 @@ class HomePageState extends State<HomePage>{
               ),
             ),
             ListTile(
-              title: Text("Get Graph",style: TextStyle(fontSize: 25,color: Colors.black)),
+              leading: Icon(Icons.data_usage),
+              title: Text("Get Categories",style: TextStyle(fontSize: 25,color: Colors.black)),
               onTap: (){
-                getData("graph");
-                /*Navigator.push(context, MaterialPageRoute(
-                  builder: (context)=> Stats(temp_usageList)
-                ));*/
+                
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context)=> Categories(tempChild)
+                ));
               },
             ),
-            ListTile(
+            /*ListTile(
               title: Text("Get Data",style: TextStyle(fontSize: 25,color: Colors.black),),
               onTap: (){
                 /*Navigator.push(context, MaterialPageRoute(
@@ -219,11 +224,15 @@ class HomePageState extends State<HomePage>{
                 ));*/
                 getData("data");
               },
-            ),
+            ),*/
             ListTile(
+              leading: Icon(Icons.power_input),
               title: Text("Log out",style: TextStyle(fontSize: 25,color: Colors.black),),
               onTap: (){
                 FirebaseAuth.instance.signOut();
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context)=> AuthPage()
+                ));
               },
             ),
 
@@ -264,20 +273,32 @@ class HomePageState extends State<HomePage>{
                   height: 20,
                 ),
                 Divider(),
-                MaterialButton(
-                color: Colors.red,
-                child: Text("Get Graph"),
-                onPressed: (){
-                  getData("graph");
-                },
-              ),
-              /*MaterialButton(
-                color: Colors.blue,
-                child: Text("Get Data"),
-                onPressed: (){
-                  getData("data");
-                },
-              ),*/
+                
+              new RaisedButton(
+          shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
+            color: Colors.red,
+          child: Text(
+            'Get graph',
+            style: TextStyle(fontSize: 20,color: Colors.white)
+          ),
+          onPressed: (){
+            getData("graph");
+          },
+        ),
+              new RaisedButton(
+          shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(30.0)),
+            color: Colors.red,
+          child: Text(
+            'Get data',
+            style: TextStyle(fontSize: 20,color: Colors.white)
+          ),
+          onPressed: (){
+            getData("data");
+          },
+        ),
+             
               ],
             ),
           ),

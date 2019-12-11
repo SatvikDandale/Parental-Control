@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:parental_monitor/usage.dart';
 
-class dataDisplay extends StatelessWidget
+class DataDisplay extends StatelessWidget
 {
   List<Usage> usageList;
-  dataDisplay(usageList)
+  DataDisplay(usageList)
   {
     this.usageList = usageList;
   }
@@ -22,7 +22,7 @@ class dataDisplay extends StatelessWidget
             child: ListView.builder(
               itemCount: usageList.length,
               itemBuilder: (BuildContext ctxt, int i){
-                  return ForCard(usageList[i].site, usageList[i].totalUsage);
+                  return forCard(usageList[i].site, usageList[i].totalUsage);
               },
             ),
           )
@@ -31,7 +31,7 @@ class dataDisplay extends StatelessWidget
     );
   }
   
-Widget ForCard(String site, int totalUsage) {
+Widget forCard(String site, int totalUsage) {
     return new Card(
       elevation: 30,
       margin: EdgeInsets.all(15),
@@ -48,7 +48,7 @@ Widget ForCard(String site, int totalUsage) {
                   textAlign: TextAlign.center,
                 ),
                 new Text(
-                  ((totalUsage/60).toInt()).toString()+" Mins",
+                  (totalUsage~/60).toString()+" Mins",
                   //style: Theme.of(context).textTheme.subtitle,
                   textAlign: TextAlign.center,
                 )

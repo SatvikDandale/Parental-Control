@@ -19,7 +19,7 @@ class StatsState extends State<Stats>{
       charts.Series(
         id: "Subscribers",
         data: widget.usageList,
-        domainFn: (Usage series, _) => series.site,
+        domainFn: (Usage series, _) => series.site.replaceAll(RegExp(r'www_'), "").replaceAll(RegExp(r'_\w+'), ""),
         measureFn: (Usage series, _) => series.totalUsage,
       )
     ];
