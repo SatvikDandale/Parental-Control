@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:parental_monitor/authPage.dart';
@@ -10,15 +12,20 @@ import 'usage.dart';
 import 'stats.dart';
 
 class HomePage extends StatefulWidget {
-  final FirebaseUser user;
-  final List<String> childrenList;
-  const HomePage(this.user, this.childrenList);
+  FirebaseUser user;
+  List<String> childrenList;
+  HomePage(FirebaseUser user, List<String> childrenList){
+    this.user = user;
+    this.childrenList = childrenList;
+  }
 
   @override
   HomePageState createState() => HomePageState();
 }
 
 class HomePageState extends State<HomePage> {
+  final FirebaseMessaging _fcm = FirebaseMessaging();
+
   String currentChild;
   final DatabaseReference db = FirebaseDatabase.instance.reference();
   String currentUser = "";
@@ -28,6 +35,8 @@ class HomePageState extends State<HomePage> {
       DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
   DateTime _toDay = new DateTime(DateTime.now().year, DateTime.now().month,
       DateTime.now().day, DateTime.now().hour, DateTime.now().minute);
+  TextEditingController childNameController = TextEditingController();
+  TextEditingController childEmailController = TextEditingController();
   List<Usage> tempUsageList;
   List<Usage> usageList;
   // This will contain a list of websites and their corresponding usage
@@ -40,7 +49,47 @@ class HomePageState extends State<HomePage> {
     currentUserEmail = widget.user.email;
     currentUser = currentUserEmail.replaceAll(RegExp(r'@\w+.\w+'), "");
 
-    currentChild = widget.childrenList[0];
+    try{
+      currentChild = widget.childrenList[0];
+    }
+    catch(e){
+      currentChild = "NULL";
+    }
+
+    // Messaging Services
+    _fcm.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print("onMessage: $message");
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                      content: ListTile(
+                      title: Text(message['notification']['title']),
+                      subtitle: Text(message['notification']['body']),
+                      ),
+                      actions: <Widget>[
+                      FlatButton(
+                          child: Text('Ok'),
+                          onPressed: () => Navigator.of(context).pop(),
+                      ),
+                  ],
+              ),
+          );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+          print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+          print("onResume: $message");
+      },
+    );
+
+    
+    _fcm.requestNotificationPermissions();
+    _fcm.getToken().then((token){
+      print(token);
+    });
+
   }
 
   void appendDict(newDict) {
@@ -105,14 +154,14 @@ class HomePageState extends State<HomePage> {
     });
   }
 
-  void _showDialog() {
+  void _showDialog(title, content) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: new Text("Zero Time Usage"),
+            title: new Text(title),
             content: new Text(
-                "The Internet Usage of your child on this day is ZERO. YAY!"),
+                content),
           );
         });
   }
@@ -167,13 +216,71 @@ class HomePageState extends State<HomePage> {
                     builder: (context) => new DataDisplay(usageList)));
           }
         } else {
-          _showDialog();
+          _showDialog("Zero Internet Usage", "There is no Internet Usage between the seleteced dates.");
         }
         timer.cancel();
       }
     });
   }
 
+  void addCategory() {
+    Alert(
+      context: context,
+      title: "Add a new Child",
+      content: Container(
+        padding: EdgeInsets.all(0),
+        child: new Column(
+          children: <Widget>[
+            TextField(
+              controller: childNameController,
+              decoration: InputDecoration(hintText: "Enter the Name of the Child"),
+            ),
+            TextField(
+              controller: childEmailController,
+              decoration: InputDecoration(hintText: "Enter the Email Id of the Child"),
+            )
+          ],
+        ),
+      ),
+      buttons: [
+        DialogButton(
+          child: new Text('Ok'),
+          onPressed: () {
+            DatabaseReference newdb = db.child("Internet Usage").child(currentUser).child("Children");
+            setState(() {
+              String newChildEmail = childEmailController.text.toString();
+              String newChildName = childNameController.text.toString();
+              
+              
+              newdb.set({
+                newChildName: newChildEmail
+              });
+            }); // SetState()
+            newdb.once().then((DataSnapshot childSnapShot) {
+                setState(() {
+                  var childrenDict = childSnapShot.value;
+                  try{
+                    for (String childNumber in childrenDict.keys) {
+                      if (widget.childrenList == null) {
+                        widget.childrenList = [childrenDict[childNumber]];
+                      } else {
+                        widget.childrenList.add(childrenDict[childNumber]);
+                      }
+                    }
+                    currentChild = widget.childrenList[0];
+                  }
+                  catch(e){
+                    widget.childrenList = [];
+                    currentChild = "NULL";
+                  }
+                });
+            });
+            Navigator.pop(context);
+          },
+        )
+      ],
+    ).show();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,6 +346,18 @@ class HomePageState extends State<HomePage> {
                     },
                   );
                 })
+                // After the children, another button is needed. Add Child 
+                + [
+                  ListTile(
+                    title: Text(
+                      "Add a Child",
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                    onTap: (){
+                      addCategory();
+                    },
+                  )
+                ]
               ),
               ListTile(
                 leading: Icon(Icons.power_settings_new),
@@ -316,7 +435,11 @@ class HomePageState extends State<HomePage> {
               child: Text('Get Graph',
                   style: TextStyle(fontSize: 20, color: Colors.white)),
               onPressed: () {
-                getData("graph");
+                if (currentChild != "NULL")
+                  getData("graph");
+                else{
+                  _showDialog("No Children", "There are no children added to your profile");
+                }
               },
             ),
             new RaisedButton(
@@ -326,7 +449,11 @@ class HomePageState extends State<HomePage> {
               child: Text('Get Data',
                   style: TextStyle(fontSize: 20, color: Colors.white)),
               onPressed: () {
-                getData("data");
+                if (currentChild != "NULL")
+                  getData("data");
+                else{
+                  _showDialog("No Children", "There are no children added to your profile");
+                }
               },
             ),
           ],

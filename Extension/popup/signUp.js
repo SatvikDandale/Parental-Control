@@ -39,6 +39,7 @@ const txtEmail = document.getElementById('txtEmail');
 const txtPassword = document.getElementById('txtPassword');
 const parentEmail = document.getElementById('parentEmail');
 const btnSignUp = document.getElementById('btnSignUp');
+const btnSignIn = document.getElementById('btnSignIn');
 
 // btnSignUp.addEventListener('click', e => {
 //     const email = txtEmail.value;
@@ -46,6 +47,10 @@ const btnSignUp = document.getElementById('btnSignUp');
 //     const promise = firebase.auth().createUserWithEmailAndPassword(email, pass);
 //     promise.catch(e => console.log(e.message));
 // });
+
+btnSignIn.addEventListener('click', e =>{
+    window.location.replace("index.html")
+})
 
 function checkParents(parentName, currentChildEmail, currentChildPassword){
     parentName = parentName.replace(/@\w+\.\w+/g, "");  // Remove anything after and including @

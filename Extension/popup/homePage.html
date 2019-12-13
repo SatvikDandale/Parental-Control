@@ -1,21 +1,33 @@
-<html>
+<html style="height:200">
     <title>Pop Up</title>
     <head>
-
+        <link rel="stylesheet" type="text/css" href="css/util.css">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <!--===============================================================================================-->
     </head>
-    <body>
+    <body style="height:200">
         <script src="firebase-app.js"></script>
         <script src="firebase-auth.js"></script>
         <!-- <script src="commonInfo.js"></script> -->
-        <div class="popup" style='margin:0;overflow:hidden;height:auto;width: 400px' >
-            <table id="table">
-            </table>
-
+        
+        <div class="limiter">
+                <div class="wrap-login100">
+                    <span class="login100-form-btn">
+                        Home Page
+                    </span>
+                    <br>
+                    <br>
+                    <div class="popup" style='margin:0;height:auto;width: 400px' >
+                        <table id="table"></table>
+                    </div>
+                    <br>
+                    <div class="container-login100-form-btn">
+                        <button id="btnLogout" class="login100-form-btn">
+                            Log Out
+                        </button>
+                    </div>
+                </div>
         </div>
-        <br>
-        <button id="btnLogout" class="btn btn-action hide">
-            Log Out
-        </button>
         <script src="homePage.js"></script>
-    </body>
+    </body style="height:600">
 </html>

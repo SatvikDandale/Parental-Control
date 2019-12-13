@@ -7,15 +7,13 @@
 		"tabs", 
 		"storage", 
 		"activeTab",
+		"notifications",
 		"webRequestBlocking",
 		"webRequest",
 		"identity",
 		"http://*/*",
 		"https://*/*"
 	],
-	"chrome_url_overrides" : {
-		"pageToOverride": "blocked.html"
-	},
 	"content_scripts":[
 		{
 
@@ -30,6 +28,7 @@
 	"background":{
 		"scripts": [
 			"FireBaseCore/firebase-app.js",
+			"FireBaseCore/firebase-messaging.js",
 			"FireBaseCore/firebase-auth.js",
 			"FireBaseCore/firebase-database.js",
 			"FireBaseCore/firebase-firestore.js",

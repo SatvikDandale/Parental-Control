@@ -1,4 +1,5 @@
 
+
 /*
     #####################
     BLOCK WEBSITES
@@ -166,6 +167,25 @@ function trigger(){
 // After every fixed interval, update the data of the open tabs
 setInterval(update_info, interval); // LOCAL
 setInterval(trigger, interval); // FIREBASE
+
+function updatingCategories(){
+	retrieveCategories().then(function(webCategories){
+		categories = webCategories;
+		/*
+			NOW iterate in this categories dictionary
+			When a website is found, add that to the allWebsitesTimeLimit dictionary
+		*/
+		for(var category in categories){
+			// For each category: there are websites
+			category = categories[category];
+			for(var eachWebsite in category){
+				allWebsitesTimeLimt[eachWebsite] = category[eachWebsite];
+			}
+		}
+	});
+}
+
+setInterval(updatingCategories, 5000);
 
 chrome.extension.onConnect.addListener(function(port){
 	//console.log("Connected with pop");

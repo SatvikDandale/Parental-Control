@@ -4,6 +4,7 @@ var flag_for_update = false;
 var parents;
 blockList = []
 
+
 var config = {
     apiKey: "AIzaSyC5VDpdFZVH3OuzN_sbnMAiMIq9gac39WQ",
     authDomain: "chrome-extension-83331.firebaseapp.com",
@@ -14,6 +15,17 @@ var config = {
     appId: "1:911483901445:web:8c4577a3f06d59c7006e6c"
 };
 const app = firebase.initializeApp(config);
+
+
+// chrome.notifications.create(
+//     'name-for-notification',{   
+//     type: 'basic', 
+//     iconUrl: 'notification.jpg', 
+//     title: "This is a notification", 
+//     message: "hello there!" 
+//     },
+//     function() {}
+// );
 
 // Get today's date:
 var today = new Date();
