@@ -2,13 +2,13 @@ console.log("homepage.js")
 
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyC5VDpdFZVH3OuzN_sbnMAiMIq9gac39WQ",
-    authDomain: "chrome-extension-83331.firebaseapp.com",
-    databaseURL: "https://chrome-extension-83331.firebaseio.com",
-    projectId: "chrome-extension-83331",
-    storageBucket: "chrome-extension-83331.appspot.com",
-    messagingSenderId: "911483901445",
-    appId: "1:911483901445:web:8c4577a3f06d59c7006e6c"
+    apiKey: "AIzaSyC5VDWQ",
+    authDomain: "chon-83331pp.com",
+    databaseURL: "https://chrom331.firebaseio.com",
+    projectId: "chension-83331",
+    storageBucket: "chrome-pot.com",
+    messagingSenderId: "911",
+    appId: "1:919c7006e6c"
 };
 firebase.initializeApp(config);
 
